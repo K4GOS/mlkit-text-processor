@@ -1,5 +1,11 @@
 import MlkitTextProcessor from './NativeMlkitTextProcessor';
 
-export function multiply(a: number, b: number): number {
-  return MlkitTextProcessor.multiply(a, b);
-}
+export const {
+  recognizeTextFromUri,
+  translateText,
+  translateJapaneseText,
+  uninstallLanguageModel,
+  getDownloadedTranslationModels,
+} = MlkitTextProcessor;
+
+export { useTextRecognition } from './TextRecognition';

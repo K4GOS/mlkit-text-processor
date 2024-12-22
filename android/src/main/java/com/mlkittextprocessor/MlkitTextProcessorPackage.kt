@@ -5,9 +5,22 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.mrousavy.camera.frameprocessors.FrameProcessorPluginRegistry
 import java.util.HashMap
 
 class MlkitTextProcessorPackage : BaseReactPackage() {
+
+  companion object {
+    init {
+      FrameProcessorPluginRegistry.addFrameProcessorPlugin("getTextFromFrame") { proxy, options ->
+        VisionCameraTextRecognitionPlugin(proxy, options)
+      }
+    }
+  }
+  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+    return emptyList()
+  }
+
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
     return if (name == MlkitTextProcessorModule.NAME) {
       MlkitTextProcessorModule(reactContext)

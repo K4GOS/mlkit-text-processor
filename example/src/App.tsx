@@ -1,8 +1,8 @@
-import {
-  getDownloadedTranslationModels,
-  uninstallLanguageModel,
-  useTextRecognition,
-} from 'react-native-mlkit-text-processor';
+// import {
+//   getDownloadedTranslationModels,
+//   uninstallLanguageModel,
+//   // useTextRecognition,
+// } from 'react-native-mlkit-text-processor';
 import { useRef } from 'react';
 import { Button, Text, View } from 'react-native';
 import {
@@ -11,6 +11,7 @@ import {
   useCameraDevice,
   useCameraFormat,
   useCameraPermission,
+  // useCameraPermission,
   useSkiaFrameProcessor,
 } from 'react-native-vision-camera';
 import { PaintStyle, Skia } from '@shopify/react-native-skia';
@@ -19,8 +20,12 @@ import { useSharedValue } from 'react-native-worklets-core';
 export default function App() {
   const device = useCameraDevice('back');
   const { hasPermission } = useCameraPermission();
-  const format = useCameraFormat(device, []);
-  const { getTextFromFrame } = useTextRecognition();
+  const format = useCameraFormat(device, [
+    { videoResolution: { width: 3048, height: 2160 } },
+    { fps: 'max' },
+  ]);
+
+  // const { getTextFromFrame } = useTextRecognition();
   // const [isLoading, setIsLoading] = useState(false);
 
   // const frameProcessor = useFrameProcessor((frame) => {
@@ -40,7 +45,7 @@ export default function App() {
     'worklet';
     runAsync(frame, () => {
       'worklet';
-      const blocks = getTextFromFrame(frame);
+      const blocks: any[] = [];
 
       if (blocks.length > 0) {
         blocksCoords.value = blocks.filter((block) => block.dimensions);
@@ -93,8 +98,16 @@ export default function App() {
   //     console.log(res);
   //   };
 
-  if (!hasPermission) return <Text>No permission</Text>;
-  if (device == null) return <Text>No device</Text>;
+  if (!hasPermission)
+    return (
+      <Text style={{ backgroundColor: 'red', color: 'white' }}>
+        No permission
+      </Text>
+    );
+  if (device == null)
+    return (
+      <Text style={{ backgroundColor: 'red', color: 'white' }}>No device</Text>
+    );
 
   return (
     <>
@@ -109,7 +122,7 @@ export default function App() {
         isActive
         photo
         pixelFormat="yuv"
-        fps={format?.maxFps || 30}
+        fps={[format?.minFps || 0, format?.maxFps || 30]}
       />
       <View
         style={{
@@ -122,9 +135,9 @@ export default function App() {
         <Button
           title="Start"
           onPress={async () => {
-            await uninstallLanguageModel('fr');
-            const downloadedModels = await getDownloadedTranslationModels();
-            console.log(downloadedModels);
+            // await uninstallLanguageModel('fr');
+            // const downloadedModels = await getDownloadedTranslationModels();
+            // console.log(downloadedModels);
           }}
         />
       </View>

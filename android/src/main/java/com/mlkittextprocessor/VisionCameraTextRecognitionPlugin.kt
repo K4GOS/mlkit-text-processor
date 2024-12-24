@@ -1,7 +1,5 @@
 package com.mlkittextprocessor
 
-import com.facebook.react.bridge.WritableNativeArray
-import com.facebook.react.bridge.WritableNativeMap
 import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -15,32 +13,18 @@ import kotlin.math.abs
 class VisionCameraTextRecognitionPlugin(proxy: VisionCameraProxy, options: Map<String, Any>?) :
   FrameProcessorPlugin() {
 
-//  private var recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-//  private val latinOptions = TextRecognizerOptions.DEFAULT_OPTIONS
-//  private val chineseOptions = ChineseTextRecognizerOptions.Builder().build()
-//  private val devanagariOptions = DevanagariTextRecognizerOptions.Builder().build()
-//  private val japaneseOptions = JapaneseTextRecognizerOptions.Builder().build()
-//  private val koreanOptions = KoreanTextRecognizerOptions.Builder().build()
-//
+  private val japaneseOption = JapaneseTextRecognizerOptions.Builder().build()
+  private val recognizer = TextRecognition.getClient(japaneseOption)
+
 //  init {
 //    val language = options?.get("language").toString()
-//    recognizer = when (language) {
-//      "latin" -> TextRecognition.getClient(latinOptions)
-//      "chinese" -> TextRecognition.getClient(chineseOptions)
-//      "devanagari" -> TextRecognition.getClient(devanagariOptions)
-//      "japanese" -> TextRecognition.getClient(japaneseOptions)
-//      "korean" -> TextRecognition.getClient(koreanOptions)
-//      else -> TextRecognition.getClient(latinOptions)
-//    }
 //  }
 
   override fun callback(frame: Frame, arguments: Map<String, Any>?): List<Any> {
-    val image = frame.image
+      val image = frame.image
       val inputImage = InputImage.fromMediaImage(image, 0)
 
-
       // Perform text recognition
-      val recognizer = TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
       val visionText = try {
         Tasks.await(recognizer.process(inputImage))
       } catch (e: Exception) {
